@@ -1,0 +1,19 @@
+timestamp,origin,destination,distance_meters,duration_seconds,duration_traffic_seconds,traffic_delay,hour,minute,day_of_week,is_weekend
+2025-08-05T15:11:12.041308,"Universitas Gadjah Mada, Yogyakarta","Stasiun Lempuyangan, Yogyakarta",2618,458,583,125,15,11,1,False
+2025-08-05T15:11:12.274818,"Universitas Gadjah Mada, Yogyakarta","Stasiun Tugu, Yogyakarta",3075,520,603,83,15,11,1,False
+2025-08-05T15:11:12.474995,"Universitas Gadjah Mada, Yogyakarta","Tugu Jogja, Yogyakarta",2816,511,612,101,15,11,1,False
+2025-08-05T15:11:12.677793,"Universitas Gadjah Mada, Yogyakarta","Malioboro, Yogyakarta",3486,570,728,158,15,11,1,False
+2025-08-05T15:11:12.930736,"Universitas Gadjah Mada, Yogyakarta","Kota Gede, Yogyakarta",8312,1174,1398,224,15,11,1,False
+2025-08-05T15:11:13.182699,"Universitas Gadjah Mada, Yogyakarta","Prawirotaman, Yogyakarta",6342,1096,1419,323,15,11,1,False
+2025-08-05T18:19:43.999958,"Universitas Gadjah Mada, Yogyakarta","Stasiun Lempuyangan, Yogyakarta",2618,458,538,80,18,19,1,False
+2025-08-05T18:19:44.339215,"Universitas Gadjah Mada, Yogyakarta","Stasiun Tugu, Yogyakarta",3075,520,612,92,18,19,1,False
+2025-08-05T18:19:44.636635,"Universitas Gadjah Mada, Yogyakarta","Tugu Jogja, Yogyakarta",2816,511,595,84,18,19,1,False
+2025-08-05T18:19:45.651114,"Universitas Gadjah Mada, Yogyakarta","Malioboro, Yogyakarta",3486,570,723,153,18,19,1,False
+2025-08-05T18:19:46.079886,"Universitas Gadjah Mada, Yogyakarta","Kota Gede, Yogyakarta",7975,1135,1248,113,18,19,1,False
+2025-08-05T18:19:46.388487,"Universitas Gadjah Mada, Yogyakarta","Prawirotaman, Yogyakarta",6342,1096,1300,204,18,19,1,False
+2025-08-05T18:21:26.911113,"Universitas Gadjah Mada, Yogyakarta","Stasiun Lempuyangan, Yogyakarta",2618,458,528,70,18,21,1,False
+2025-08-05T18:21:27.142475,"Universitas Gadjah Mada, Yogyakarta","Stasiun Tugu, Yogyakarta",3075,520,615,95,18,21,1,False
+2025-08-05T18:21:27.357562,"Universitas Gadjah Mada, Yogyakarta","Tugu Jogja, Yogyakarta",2816,511,580,69,18,21,1,False
+2025-08-05T18:21:28.148117,"Universitas Gadjah Mada, Yogyakarta","Malioboro, Yogyakarta",3486,570,710,140,18,21,1,False
+2025-08-05T18:21:28.454292,"Universitas Gadjah Mada, Yogyakarta","Kota Gede, Yogyakarta",7975,1135,1248,113,18,21,1,False
+2025-08-05T18:21:28.718373,"Universitas Gadjah Mada, Yogyakarta","Prawirotaman, Yogyakarta",6346,1104,1278,174,18,21,1,False

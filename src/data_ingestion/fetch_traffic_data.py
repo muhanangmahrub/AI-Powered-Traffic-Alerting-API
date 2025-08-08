@@ -68,13 +68,29 @@ def save_to_csv(data, filename):
         return
 
     tmp_path = f"/tmp/{filename}"
-    file_exists = os.path.isfile(tmp_path)
+    all_rows = []
 
-    with open(tmp_path, mode="a", newline="") as file:
+    # 1️⃣ Ambil data lama dari Dropbox
+    try:
+        metadata, res = dbx.files_download(f"/{filename}")
+        content = res.content.decode("utf-8").splitlines()
+        reader = csv.DictReader(content)
+        all_rows.extend(reader)
+        print(f"📥 Data lama ditemukan: {len(all_rows)} baris")
+    except dropbox.exceptions.ApiError:
+        print("ℹ️ Tidak ada file lama di Dropbox, mulai dari kosong.")
+
+    all_rows.append(data)
+
+    unique_rows = {}
+    for row in all_rows:
+        key = (row["timestamp"], row["origin"], row["destination"])
+        unique_rows[key] = row  # overwrite jika ada yang sama
+
+    with open(tmp_path, mode="w", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=data.keys())
-        if not file_exists:
-            writer.writeheader()
-        writer.writerow(data)
+        writer.writeheader()
+        writer.writerows(unique_rows.values())
 
     # Upload ke Dropbox (overwrite jika sudah ada)
     with open(tmp_path, "rb") as f:

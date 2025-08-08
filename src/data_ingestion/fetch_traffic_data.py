@@ -1,8 +1,8 @@
 import requests
-import os
 import csv
 import dropbox
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from googlemaps import Client
 from src.config.settings import GMAPS_API_KEY, DROBOX_API_KEY
 
@@ -17,6 +17,9 @@ locations = [
     ("Universitas Gadjah Mada, Yogyakarta", "Kota Gede, Yogyakarta"),
     ("Universitas Gadjah Mada, Yogyakarta", "Prawirotaman, Yogyakarta"),
 ]
+
+def get_wib_time():
+    return datetime.now(ZoneInfo("Asia/Jakarta"))
 
 def enrich_time_features(ts: datetime):
     return {
@@ -40,7 +43,7 @@ def fetch_traffic(origin, destination):
 
     try:
         leg = data['routes'][0]['legs'][0]
-        now = datetime.now()
+        now = get_wib_time()
         time_features = enrich_time_features(now)
 
         duration = leg['duration']['value']

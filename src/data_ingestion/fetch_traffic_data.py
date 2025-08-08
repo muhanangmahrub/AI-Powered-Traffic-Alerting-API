@@ -70,5 +70,3 @@ def save_to_csv(data, filename):
         if not file_exists:
             writer.writeheader()
         writer.writerow(data)
-
-

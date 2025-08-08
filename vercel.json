@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "pipeline.py",
+      "use": "@vercel/pythoh"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "pipeline.py"
+    }
+  ]
+}

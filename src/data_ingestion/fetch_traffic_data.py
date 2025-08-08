@@ -1,11 +1,13 @@
 import requests
 import os
 import csv
+import dropbox
 from datetime import datetime
 from googlemaps import Client
-from src.config.settings import GMAPS_API_KEY
+from src.config.settings import GMAPS_API_KEY, DROBOX_API_KEY
 
 gmaps = Client(key=GMAPS_API_KEY)
+dbx = dropbox.Dropbox(DROBOX_API_KEY)
 
 locations = [
     ("Universitas Gadjah Mada, Yogyakarta", "Stasiun Lempuyangan, Yogyakarta"),
@@ -61,12 +63,24 @@ def fetch_traffic(origin, destination):
         return None
 
 def save_to_csv(data, filename):
+    """Simpan ke CSV sementara lalu upload ke Dropbox"""
     if data is None:
         return
 
-    file_exists = os.path.isfile(filename)
-    with open(filename, mode="a", newline="") as file:
+    tmp_path = f"/tmp/{filename}"
+    file_exists = os.path.isfile(tmp_path)
+
+    with open(tmp_path, mode="a", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=data.keys())
         if not file_exists:
             writer.writeheader()
         writer.writerow(data)
+
+    # Upload ke Dropbox (overwrite jika sudah ada)
+    with open(tmp_path, "rb") as f:
+        dbx.files_upload(
+            f.read(),
+            f"/{filename}",  # lokasi di Dropbox
+            mode=dropbox.files.WriteMode("overwrite")
+        )
+    print(f"✅ File {filename} berhasil diupload ke Dropbox.")

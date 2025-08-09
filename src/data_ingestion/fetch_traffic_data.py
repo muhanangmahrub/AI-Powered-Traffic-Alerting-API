@@ -1,13 +1,18 @@
 import requests
-import csv
-import dropbox
+import json
+import firebase_admin
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from googlemaps import Client
-from src.config.settings import GMAPS_API_KEY, DROBOX_API_KEY
+from src.config.settings import GMAPS_API_KEY, FIREBASE_CONFIG
+from firebase_admin import credentials, firestore
 
 gmaps = Client(key=GMAPS_API_KEY)
-dbx = dropbox.Dropbox(DROBOX_API_KEY)
+firebase_key_dict = json.loads(FIREBASE_CONFIG)
+
+cred = credentials.Certificate(firebase_key_dict)
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 
 locations = [
     ("Universitas Gadjah Mada, Yogyakarta", "Stasiun Lempuyangan, Yogyakarta"),
@@ -64,42 +69,13 @@ def fetch_traffic(origin, destination):
     except (KeyError, IndexError) as e:
         print(f"Error fetching route from {origin} to {destination}: {e}")
         return None
+    
 
-def save_to_csv(data, filename):
-    """Simpan ke CSV sementara lalu upload ke Dropbox"""
-    if data is None:
-        return
-
-    tmp_path = f"/tmp/{filename}"
-    all_rows = []
-
-    # 1️⃣ Ambil data lama dari Dropbox
-    try:
-        metadata, res = dbx.files_download(f"/{filename}")
-        content = res.content.decode("utf-8").splitlines()
-        reader = csv.DictReader(content)
-        all_rows.extend(reader)
-        print(f"📥 Data lama ditemukan: {len(all_rows)} baris")
-    except dropbox.exceptions.ApiError:
-        print("ℹ️ Tidak ada file lama di Dropbox, mulai dari kosong.")
-
-    all_rows.append(data)
-
-    unique_rows = {}
-    for row in all_rows:
-        key = (row["timestamp"], row["origin"], row["destination"])
-        unique_rows[key] = row  # overwrite jika ada yang sama
-
-    with open(tmp_path, mode="w", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=data.keys())
-        writer.writeheader()
-        writer.writerows(unique_rows.values())
-
-    # Upload ke Dropbox (overwrite jika sudah ada)
-    with open(tmp_path, "rb") as f:
-        dbx.files_upload(
-            f.read(),
-            f"/{filename}",  # lokasi di Dropbox
-            mode=dropbox.files.WriteMode("overwrite")
-        )
-    print(f"✅ File {filename} berhasil diupload ke Dropbox.")
+def save_to_firestore_batch(data_list):
+    batch = db.batch()
+    for data in data_list:
+        doc_id = f"{data['timestamp']}_{data['origin']}_{data['destination']}"
+        doc_id = doc_id.replace(" ", "_").replace(":", "-")
+        doc_ref = db.collection("traffic_data").document(doc_id)
+        batch.set(doc_ref, data)
+    batch.commit()

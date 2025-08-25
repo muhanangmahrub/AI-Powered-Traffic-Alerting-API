@@ -1,18 +1,10 @@
 import requests
-import json
-import firebase_admin
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from googlemaps import Client
-from src.config.settings import GMAPS_API_KEY, FIREBASE_CONFIG
-from firebase_admin import credentials, firestore
+from src.config.settings import GMAPS_API_KEY
 
 gmaps = Client(key=GMAPS_API_KEY)
-firebase_key_dict = json.loads(FIREBASE_CONFIG)
-
-cred = credentials.Certificate(firebase_key_dict)
-firebase_admin.initialize_app(cred)
-db = firestore.client()
 
 locations = [
     ("Universitas Gadjah Mada, Yogyakarta", "Stasiun Lempuyangan, Yogyakarta"),
@@ -69,13 +61,3 @@ def fetch_traffic(origin, destination):
     except (KeyError, IndexError) as e:
         print(f"Error fetching route from {origin} to {destination}: {e}")
         return None
-    
-
-def save_to_firestore_batch(data_list):
-    batch = db.batch()
-    for data in data_list:
-        doc_id = f"{data['timestamp']}_{data['origin']}_{data['destination']}"
-        doc_id = doc_id.replace(" ", "_").replace(":", "-")
-        doc_ref = db.collection("traffic_data").document(doc_id)
-        batch.set(doc_ref, data)
-    batch.commit()
